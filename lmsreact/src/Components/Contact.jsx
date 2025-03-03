@@ -1,33 +1,30 @@
 import React from 'react';
-import { Paper, Typography, Link, Box } from '@mui/material';
 
 const Contact = () => {
   return (
-    <Paper elevation={3} sx={{ padding: 3, maxWidth: 600, mx: 'auto', mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Contact Us
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        You can reach us via the following methods:
-      </Typography>
-      <Box sx={{ mt: 2 }}>
-        <Typography variant="body1">
-          <strong>Email:</strong>{' '}
-          <Link href="mailto:admin@cognizant.com" underline="hover">
-            admin@cognizant.com
-          </Link>
-        </Typography>
-        <Typography variant="body1">
-          <strong>Phone:</strong> (+91) 999-888-8888
-        </Typography>
-        <Typography variant="body1">
-          <strong>Address:</strong> Cognizant H04, HiTech City, Hyderabad, Telangana, India
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          Hours of Operation: Monday - Friday, 9:00 AM - 5:00 PM.
-        </Typography>
-      </Box>
-    </Paper>
+    <div className="container my-5">
+      <div className="card shadow">
+        <div className="card-body">
+          <h2 className="card-title text-center">Contact Us</h2>
+          <p className="card-text">
+            You can reach us via the following methods:
+          </p>
+          <p className="card-text">
+            <strong>Email:</strong>
+            <a href="mailto:cognizant@librarysystem.com" className="ms-1">cognizant@librarysystem.com</a>
+          </p>
+          <p className="card-text">
+            <strong>Phone:</strong> +91 9988776655
+          </p>
+          <p className="card-text">
+            <strong>Address:</strong> Pheonix H04, HiTech City, Hyderabad, Telangana, India.
+          </p>
+          <p className="card-text">
+            <strong>Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

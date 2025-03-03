@@ -1,6 +1,5 @@
 // src/Components/Navbar.jsx
 import React from 'react';
-import { AppBar, Toolbar, Button, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
@@ -14,55 +13,58 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ mb: 2 }}>
-      <Toolbar>
-        {/* Title */}
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Library Management System
-        </Typography>
-
-        {/* Always visible Home button */}
-        <Button color="inherit" component={Link} to="/">Home</Button>
-
-        {token ? (
-          <>
-            {userRole && userRole.toLowerCase() === 'admin' ? (
-              <>
-                {/* For admin users, do not show "My Books" */}
-                <Button color="inherit" component={Link} to="/admin">
-                  Admin Panel
-                </Button>
-                <Button color="inherit" component={Link} to="/admin/users">
-                  User Details
-                </Button>
-                {/* Optional extra button for navigating back to Admin Panel */}
-                <Button color="inherit" onClick={() => navigate('/admin')}>
-                  Back to Admin
-                </Button>
-              </>
+    <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
+      <div className="container">
+        <Link className="navbar-brand" to="/">Library System</Link>
+        <div className="collapse navbar-collapse">
+          <ul className="navbar-nav me-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">Home</Link>
+            </li>
+            {token ? (
+              userRole && userRole.toLowerCase() === 'admin' ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/admin">Admin Panel</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/admin/users">User Details</Link>
+                  </li>
+                  <li className="nav-item">
+                    <button className="btn btn-link nav-link" onClick={() => navigate('/admin')}>
+                      Back to Admin
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/books">My Books</Link>
+                </li>
+              )
+            ) : null}
+          </ul>
+          <ul className="navbar-nav ms-auto">
+            {token ? (
+              <li className="nav-item">
+                <button className="btn btn-link nav-link" onClick={handleLogout}>Logout</button>
+              </li>
             ) : (
-              // Non-admin users see "My Books"
-              <Button color="inherit" component={Link} to="/books">
-                My Books
-              </Button>
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">User Login</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/register">Register</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin/login">Admin Login</Link>
+                </li>
+              </>
             )}
-            <Button color="inherit" onClick={handleLogout}>Logout</Button>
-          </>
-        ) : (
-          <>
-            <Button color="inherit" component={Link} to="/login">
-              User Login
-            </Button>
-            <Button color="inherit" component={Link} to="/register">
-              Register
-            </Button>
-            <Button color="inherit" component={Link} to="/admin/login">
-              Admin Login
-            </Button>
-          </>
-        )}
-      </Toolbar>
-    </AppBar>
+          </ul>
+        </div>
+      </div>
+    </nav>
   );
 };
 

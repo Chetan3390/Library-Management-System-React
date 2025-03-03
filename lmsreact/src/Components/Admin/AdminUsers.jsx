@@ -1,17 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  TextField,
-  Button
-} from '@mui/material';
-import adminService from '../../Services/adminServices';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -19,14 +6,18 @@ const AdminUsers = () => {
 
   const loadUsers = async () => {
     try {
-      const response = await adminService.getAllUsers();
-      setUsers(response.data);
+      const response = await fetch('http://localhost:9091/auth/users', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      setUsers(data);
     } catch (error) {
-      const errorMsg =
-        error.response && typeof error.response.data === 'object'
-          ? JSON.stringify(error.response.data)
-          : error.response?.data || error.message;
-      alert("Error fetching users: " + errorMsg);
+      alert("Error fetching users: " + error.message);
     }
   };
 
@@ -42,44 +33,47 @@ const AdminUsers = () => {
   );
 
   return (
-    <Paper elevation={3} sx={{ padding: 3, my: 2 }}>
-      <Typography variant="h4" gutterBottom>User Details</Typography>
-      <TextField
-        label="Search Users"
-        variant="outlined"
-        size="small"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        sx={{ mb: 2, width: '100%' }}
-      />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="users table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">ID</TableCell>
-              <TableCell align="center">Name</TableCell>
-              <TableCell align="center">Email</TableCell>
-              <TableCell align="center">Roles</TableCell>
-              <TableCell align="center">Phone</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredUsers.map(user => (
-              <TableRow key={user.id}>
-                <TableCell align="center">{user.id}</TableCell>
-                <TableCell align="center">{user.name}</TableCell>
-                <TableCell align="center">{user.email}</TableCell>
-                <TableCell align="center">{user.roles}</TableCell>
-                <TableCell align="center">{user.phone}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Button variant="contained" onClick={loadUsers} sx={{ mt: 2 }}>
-        Refresh Users
-      </Button>
-    </Paper>
+    <div className="card mt-3">
+      <div className="card-body">
+        <h4 className="card-title text-center">User Details</h4>
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search Users (ID, name, email, roles)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="table-responsive">
+          <table className="table table-striped table-bordered">
+            <thead className="table-light">
+              <tr>
+                <th className="text-center">ID</th>
+                <th className="text-center">Name</th>
+                <th className="text-center">Email</th>
+                <th className="text-center">Roles</th>
+                <th className="text-center">Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map(user => (
+                <tr key={user.id}>
+                  <td className="text-center">{user.id}</td>
+                  <td className="text-center">{user.name}</td>
+                  <td className="text-center">{user.email}</td>
+                  <td className="text-center">{user.roles}</td>
+                  <td className="text-center">{user.phone}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <button className="btn btn-primary" onClick={loadUsers}>
+          Refresh Users
+        </button>
+      </div>
+    </div>
   );
 };
 

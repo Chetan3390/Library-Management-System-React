@@ -14,6 +14,7 @@ import AdminUsers from './Components/Admin/AdminUsers';
 import AboutUs from './Components/AboutUs';
 import Footer from './Components/Footer';
 import Contact from './Components/Contact';
+import './index.css';
 
 function App() {
   return (

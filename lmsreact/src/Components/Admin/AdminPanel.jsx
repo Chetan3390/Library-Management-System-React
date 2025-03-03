@@ -1,35 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Typography, Paper, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import bookService from '../../Services/bookService';
 import BookTable from './BookTable';
 import AdminUsers from './AdminUsers';
 
 const AdminPanel = () => {
+  // State to store the list of books
   const [books, setBooks] = useState([]);
+  // Toggle state for showing accepted/pending book requests
   const [showBookRequests, setShowBookRequests] = useState(false);
+  // Toggle state for showing user details
   const [showUsers, setShowUsers] = useState(false);
+  // Search query state for filtering books by title or author
   const [bookSearchQuery, setBookSearchQuery] = useState('');
 
+  // react-hook-form for the "Add New Book" form
   const { register, handleSubmit, reset } = useForm();
 
+  // Load all books when the component mounts
   useEffect(() => {
     loadBooks();
   }, []);
 
+  // Function to fetch all books from the backend
   const loadBooks = async () => {
     try {
       const response = await bookService.adminGetAllBooks();
       setBooks(response.data);
     } catch (error) {
-      const errorMsg = error.response && typeof error.response.data === 'object'
-        ? JSON.stringify(error.response.data)
-        : error.response?.data || error.message;
+      const errorMsg =
+        error.response && typeof error.response.data === 'object'
+          ? JSON.stringify(error.response.data)
+          : error.response?.data || error.message;
       alert("Error fetching books: " + errorMsg);
     }
   };
 
-  // Form submission for adding a new book (without images)
+  // Function to handle submission of new book data
   const onSubmitAddBook = async (data) => {
     try {
       await bookService.addNewBook(data);
@@ -41,7 +48,7 @@ const AdminPanel = () => {
     }
   };
 
-  // Book action handlers
+  // Action handlers for book operations
   const handleAccept = async (bookId, requestUserId) => {
     try {
       await bookService.acceptBookRequest(bookId, requestUserId);
@@ -82,13 +89,13 @@ const AdminPanel = () => {
     }
   };
 
-  // Filtered books based on search query
+  // Filter books based on search query
   const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(bookSearchQuery.toLowerCase()) ||
-    book.author.toLowerCase().includes(bookSearchQuery.toLowerCase())
+    book.title.toLowerCase().includes(bookSearchQuery.toLowerCase())
+    || book.author.toLowerCase().includes(bookSearchQuery.toLowerCase())
   );
 
-  // Derive accepted and pending books
+  // Separate the filtered books into accepted and pending lists
   const acceptedBooks = filteredBooks.filter(book =>
     book.accepted === true || book.accepted === "true"
   );
@@ -97,91 +104,108 @@ const AdminPanel = () => {
   );
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>Admin Panel</Typography>
-      
-      {/* Section: Add New Book */}
-      <Paper elevation={3} sx={{ padding: 3, mb: 3, maxWidth: 500, mx: 'auto' }}>
-        <Typography variant="h6" gutterBottom>Add New Book</Typography>
-        <form onSubmit={handleSubmit(onSubmitAddBook)}>
-          <TextField 
-            label="Title" 
-            fullWidth 
-            margin="normal"
-            {...register('title', { required: 'Title is required' })}
-          />
-          <TextField 
-            label="Author" 
-            fullWidth 
-            margin="normal"
-            {...register('author', { required: 'Author is required' })}
-          />
-          <Button variant="contained" type="submit" sx={{ mt: 2 }}>
-            Add Book
-          </Button>
-        </form>
-      </Paper>
+    <div className="container">
+      <h2 className="my-3">Admin Panel</h2>
 
-      {/* Section: Search Books */}
-      <Paper elevation={3} sx={{ padding: 2, mb: 3 }}>
-        <TextField
-          label="Search Books"
-          variant="outlined"
-          size="small"
-          value={bookSearchQuery}
-          onChange={(e) => setBookSearchQuery(e.target.value)}
-          sx={{ width: '100%' }}
-        />
-      </Paper>
+      {/* Add New Book */}
+      <div className="card mb-3 mx-auto" style={{ maxWidth: '500px' }}>
+        <div className="card-body">
+          <h5 className="card-title">Add New Book</h5>
+          <form onSubmit={handleSubmit(onSubmitAddBook)}>
+            <div className="mb-3">
+              <label className="form-label">Title</label>
+              <input
+                type="text"
+                className="form-control"
+                {...register('title', { required: 'Title is required' })}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Author</label>
+              <input
+                type="text"
+                className="form-control"
+                {...register('author', { required: 'Author is required' })}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Add Book
+            </button>
+          </form>
+        </div>
+      </div>
 
-      {/* Section: All Books */}
-      <Paper elevation={3} sx={{ padding: 2, mb: 3 }}>
-        <Typography variant="h6" gutterBottom>All Books</Typography>
-        <BookTable 
-          books={filteredBooks}
-          onAccept={handleAccept}
-          onReject={handleReject}
-          onRevoke={handleRevoke}
-          onDelete={handleDelete}
-        />
-      </Paper>
+      {/* Search Books */}
+      <div className="card mb-3">
+        <div className="card-body">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search Books"
+            value={bookSearchQuery}
+            onChange={(e) => setBookSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* All Books */}
+      <div className="card mb-3">
+        <div className="card-body">
+          <h5 className="card-title">All Books</h5>
+          <BookTable
+            books={filteredBooks}
+            onAccept={handleAccept}
+            onReject={handleReject}
+            onRevoke={handleRevoke}
+            onDelete={handleDelete}
+          />
+        </div>
+      </div>
 
       {/* Toggle Book Requests */}
-      <Paper elevation={3} sx={{ padding: 2, mb: 3 }}>
-        <Button variant="contained" onClick={() => setShowBookRequests(prev => !prev)}>
-          {showBookRequests ? "Hide Book Requests" : "Show Book Requests"}
-        </Button>
-      </Paper>
+      <div className="card mb-3">
+        <div className="card-body">
+          <button className="btn btn-primary" onClick={() => setShowBookRequests(prev => !prev)}>
+            {showBookRequests ? "Hide Book Requests" : "Show Book Requests"}
+          </button>
+        </div>
+      </div>
 
       {showBookRequests && (
         <>
-          <Paper elevation={3} sx={{ padding: 2, mb: 3 }}>
-            <Typography variant="h6" gutterBottom>Accepted Book Requests</Typography>
-            <BookTable 
-              books={acceptedBooks}
-              onRevoke={handleRevoke}
-              onDelete={handleDelete}
-            />
-          </Paper>
-          <Paper elevation={3} sx={{ padding: 2, mb: 3 }}>
-            <Typography variant="h6" gutterBottom>Pending Book Requests</Typography>
-            <BookTable 
-              books={pendingBooks}
-              onAccept={handleAccept}
-              onReject={handleReject}
-              onDelete={handleDelete}
-            />
-          </Paper>
+          <div className="card mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Accepted Book Requests</h5>
+              <BookTable
+                books={acceptedBooks}
+                onRevoke={handleRevoke}
+                onDelete={handleDelete}
+              />
+            </div>
+          </div>
+          <div className="card mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Pending Book Requests</h5>
+              <BookTable
+                books={pendingBooks}
+                onAccept={handleAccept}
+                onReject={handleReject}
+                onDelete={handleDelete}
+              />
+            </div>
+          </div>
         </>
       )}
 
-      {/* Toggle User Details Section */}
-      <Paper elevation={3} sx={{ padding: 2, mb: 3 }}>
-        <Button variant="contained" onClick={() => setShowUsers(prev => !prev)}>
-          {showUsers ? "Hide User Details" : "Show User Details"}
-        </Button>
-      </Paper>
-
+      {/* Toggle User Details */}
+      <div className="card mb-3">
+        <div className="card-body">
+          <button className="btn btn-primary" onClick={() => setShowUsers(prev => !prev)}>
+            {showUsers ? "Hide User Details" : "Show User Details"}
+          </button>
+        </div>
+      </div>
+      
       {showUsers && <AdminUsers />}
     </div>
   );

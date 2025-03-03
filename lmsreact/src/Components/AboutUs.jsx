@@ -1,20 +1,24 @@
+// src/Components/AboutUs.jsx
 import React from 'react';
-import { Box, Paper, Typography } from '@mui/material';
 
 const AboutUs = () => {
   return (
-    <Paper elevation={3} sx={{ padding: 3, maxWidth: 800, mx: 'auto', mt: 4 }}>
-      <Typography variant="h4" gutterBottom>About Us</Typography>
-      <Typography variant="body1" gutterBottom>
-        Welcome to the Library Management System. Our mission is to provide an intuitive, efficient, and 
-        secure platform for managing library resources. We aim to help users access a world of knowledge 
-        with ease and offer robust administration tools for our library staff.
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Our team is dedicated to continuously improve our system and ensure that our community of readers 
-        gets the best possible support and experience. Thank you for choosing us!
-      </Typography>
-    </Paper>
+    <div className="container my-5">
+      <div className="card shadow">
+        <div className="card-body">
+          <h2 className="card-title text-center">About Us</h2>
+          <p className="card-text">
+            Welcome to the Library Management System. Our mission is to provide a robust, user-friendly platform for managing our vast collection of books.
+          </p>
+          <p className="card-text">
+            We are dedicated to innovation, empowering users to access knowledge seamlessly and efficiently.
+          </p>
+          <p className="card-text">
+            Thank you for choosing our system!
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

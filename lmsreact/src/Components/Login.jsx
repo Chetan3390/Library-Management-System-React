@@ -1,7 +1,6 @@
 // src/Components/Login.jsx
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { TextField, Button, Paper, Typography } from '@mui/material';
 import authService from '../Services/authService';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,8 +15,7 @@ const Login = () => {
       const token = tokenResponse.data;
       localStorage.setItem('token', token);
       localStorage.setItem('username', data.username);
-      
-      // Fetch user details using the endpoint in authService
+
       const userResponse = await authService.getUserDetails(data.username);
       const userObj = userResponse.data;
       if (userObj && userObj.id) {
@@ -26,40 +24,46 @@ const Login = () => {
         alert('User details not found.');
         return;
       }
-      
       localStorage.setItem('userRole', userObj.roles || 'USER');
       navigate('/books');
     } catch (error) {
-      alert('Login failed: ' + (error.response?.data || error.message));
+      alert('User Login failed: ' + (error.response?.data || error.message));
     }
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 3, maxWidth: 400, margin: 'auto', marginTop: 4 }}>
-      <Typography variant="h5" align="center">User Login</Typography>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 15 }}>
-        <TextField
-          label="Username"
-          fullWidth
-          margin="normal"
-          {...register('username', { required: 'Username is required' })}
-          error={Boolean(errors.username)}
-          helperText={errors.username?.message}
-        />
-        <TextField
-          label="Password"
-          type="password"
-          fullWidth
-          margin="normal"
-          {...register('password', { required: 'Password is required' })}
-          error={Boolean(errors.password)}
-          helperText={errors.password?.message}
-        />
-        <Button variant="contained" type="submit" fullWidth sx={{ marginTop: 2 }}>
-          Login
-        </Button>
-      </form>
-    </Paper>
+    <div className="card mx-auto mt-4" style={{ maxWidth: "400px" }}>
+      <div className="card-body">
+        <h5 className="card-title text-center">User Login</h5>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-3">
+            <label className="form-label">Username</label>
+            <input
+              type="text"
+              className={`form-control ${errors.username ? 'is-invalid' : ''}`}
+              {...register('username', { required: 'Username is required' })}
+            />
+            {errors.username && (
+              <div className="invalid-feedback">{errors.username.message}</div>
+            )}
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+              {...register('password', { required: 'Password is required' })}
+            />
+            {errors.password && (
+              <div className="invalid-feedback">{errors.password.message}</div>
+            )}
+          </div>
+          <button type="submit" className="btn btn-primary w-100">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -1,57 +1,68 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button} from '@mui/material';
 
 const BookTable = ({ books, onAccept, onReject, onRevoke, onDelete }) => {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="books table">
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Author</TableCell>
-            <TableCell>Requested</TableCell>
-            <TableCell>Accepted</TableCell>
-            <TableCell>User ID</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+    <div className="table-responsive">
+      <table className="table table-striped table-bordered">
+        <thead className="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Requested</th>
+            <th>Accepted</th>
+            <th>User ID</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {books.map((book) => (
-            <TableRow key={book.id}>
-              <TableCell>{book.id}</TableCell>
-              <TableCell>{book.title}</TableCell>
-              <TableCell>{book.author}</TableCell>
-              <TableCell>{book.requested ? "Yes" : "No"}</TableCell>
-              <TableCell>{book.accepted ? "Yes" : "No"}</TableCell>
-              <TableCell>{book.userId}</TableCell>
-              <TableCell>
+            <tr key={book.id}>
+              <td>{book.id}</td>
+              <td>{book.title}</td>
+              <td>{book.author}</td>
+              <td>{book.requested ? 'Yes' : 'No'}</td>
+              <td>{book.accepted ? 'Yes' : 'No'}</td>
+              <td>{book.userId}</td>
+              <td>
                 {book.requested && onAccept && (
                   <>
-                    <Button variant="contained" size="small" onClick={() => onAccept(book.id, book.userId)}>
+                    <button
+                      className="btn btn-primary btn-sm me-1"
+                      onClick={() => onAccept(book.id, book.userId)}
+                    >
                       Accept
-                    </Button>
-                    <Button variant="outlined" size="small" onClick={() => onReject(book.id, book.userId)}>
+                    </button>
+                    <button
+                      className="btn btn-outline-secondary btn-sm me-1"
+                      onClick={() => onReject(book.id, book.userId)}
+                    >
                       Reject
-                    </Button>
+                    </button>
                   </>
                 )}
                 {book.accepted && onRevoke && (
-                  <Button variant="contained" color="secondary" size="small" onClick={() => onRevoke(book.id, book.userId)}>
+                  <button
+                    className="btn btn-secondary btn-sm me-1"
+                    onClick={() => onRevoke(book.id, book.userId)}
+                  >
                     Revoke
-                  </Button>
+                  </button>
                 )}
                 {onDelete && (
-                  <Button variant="outlined" color="error" size="small" onClick={() => onDelete(book.id)}>
+                  <button
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={() => onDelete(book.id)}
+                  >
                     Delete
-                  </Button>
+                  </button>
                 )}
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </tbody>
+      </table>
+    </div>
   );
 };
 

@@ -1,40 +1,30 @@
+// src/Components/BookCard.jsx
 import React from 'react';
-import { Card, CardMedia, CardContent, CardActions, Typography, Button } from '@mui/material';
 
 const BookCard = ({ book, onRequest, onReturn }) => {
-  // Ensure accepted is a boolean (could be returned as string "true")
-  const accepted = book.accepted === true || book.accepted === "true";
-
   return (
-    <Card sx={{ maxWidth: 345, m: 2 }}>
-      {book.image && (
-        <CardMedia
-          component="img"
-          height="140"
-          image={book.image}
-          alt={book.title}
-        />
-      )}
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-          {book.title}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {book.author}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Requested: {book.requested ? "Yes" : "No"} | Accepted: {accepted ? "Yes" : "No"}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        {(!book.requested && !accepted) && (
-          <Button size="small" onClick={() => onRequest(book.id)}>Request</Button>
-        )}
-        {(accepted && Number(book.userId) === Number(localStorage.getItem('userId'))) && (
-          <Button size="small" onClick={() => onReturn(book.id)}>Return</Button>
-        )}
-      </CardActions>
-    </Card>
+    <div className="card h-100">
+      <div className="card-body d-flex flex-column">
+        <h5 className="card-title">{book.title}</h5>
+        <p className="card-text mb-1">Author: {book.author}</p>
+        <p className="card-text mb-1">
+          Requested: {book.requested ? 'Yes' : 'No'} <br />
+          Accepted: {book.accepted ? 'Yes' : 'No'}
+        </p>
+        <div className="mt-auto">
+          {(!book.requested && !book.accepted) && (
+            <button className="btn btn-primary btn-sm" onClick={() => onRequest(book.id)}>
+              Request
+            </button>
+          )}
+          {(book.accepted && Number(book.userId) === Number(localStorage.getItem('userId'))) && (
+            <button className="btn btn-secondary btn-sm" onClick={() => onReturn(book.id)}>
+              Return
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
