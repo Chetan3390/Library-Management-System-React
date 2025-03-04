@@ -1,6 +1,8 @@
 import api from './api';
 
-const ADMIN_BASE_URL = 'http://localhost:9091/auth'; // Adjust the port/path as needed
+// This service contains functions for admin-related API calls.
+
+const ADMIN_BASE_URL = 'http://localhost:9091/auth'; 
 
 const adminService = {
   // This method fetches all user details from the backend.

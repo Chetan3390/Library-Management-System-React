@@ -1,5 +1,6 @@
-// src/services/bookService.js
 import api from './api';
+
+// This service contains functions for book-related API calls.
 
 const BOOK_API = 'http://localhost:9091/books'; // Adjust based on your backend API URLs
 const ADMIN_API = 'http://localhost:9091/admin';

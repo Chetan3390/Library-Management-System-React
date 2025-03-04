@@ -1,4 +1,3 @@
-// src/Components/Home.jsx
 import React from 'react';
 
 const Home = () => {
@@ -6,8 +5,8 @@ const Home = () => {
     <div
       className="d-flex align-items-center justify-content-center"
       style={{
-        minHeight: 'calc(100vh - 140px)', // Adjust this value if you have header/footer height
-        backgroundImage: 'url(/Library.jpg)',  // Assumes the image is in the public folder
+        minHeight: 'calc(100vh - 140px)', // Adjust this value due to header/footer height
+        backgroundImage: 'url(/Library.jpg)',  //Image is in the public folder
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

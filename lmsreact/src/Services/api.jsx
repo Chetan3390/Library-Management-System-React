@@ -1,8 +1,9 @@
-import axios from 'axios';
+import axios from 'axios'; // This file creates a centralized Axios instance.
+// It attaches the authorization header from localStorage to each request.
 
 const api = axios.create();
 
-// Attach the JWT token (if present) on every request
+// Attach the JWT token on every request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');

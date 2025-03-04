@@ -1,52 +1,61 @@
-// src/Components/Books.jsx
-import React, { useEffect, useState } from 'react';
-import bookService from '../Services/bookService';
-import BookCard from './BookCard';
+import React, { useEffect, useState } from 'react'; // Import React and necessary hooks from React library.
+import bookService from '../Services/bookService'; // Import bookService to handle API calls for fetching books.
+import BookCard from './BookCard'; ; // Import the BookCard component which displays individual book details.
 
 const Books = () => {
-  const [books, setBooks] = useState([]);
-  const [tab, setTab] = useState('all'); // 'all', 'accepted', 'pending', 'search'
-  const [searchQuery, setSearchQuery] = useState('');
+  // Define state variables using useState hook.
+  const [books, setBooks] = useState([]); // 'books' will store the array of books.
+  const [tab, setTab] = useState('all'); // 'tab' will control which set of books to display: 'all', 'accepted', 'pending', 'search'.
+  const [searchQuery, setSearchQuery] = useState(''); // 'searchQuery' will store the user's search input.
   
+  // Retrieve userId and userRole from local storage to identify the logged-in user and their role.
   const userId = localStorage.getItem('userId');
   const userRole = localStorage.getItem('userRole');
-  const isAdmin = userRole === 'ADMIN';
+  const isAdmin = userRole === 'ADMIN'; // Check if the logged-in user is an admin.
 
-  // Load books on mount (only for non-admin)
+  
+
+  // useEffect hook to run loadBooks function when component mounts or when 'tab', 'searchQuery', or 'isAdmin' changes.
   useEffect(() => {
     if (!isAdmin) {
       loadBooks();
     }
   }, [tab, searchQuery, isAdmin]);
 
+  // Function to load books from backend using bookService.
   const loadBooks = async () => {
     try {
       let response;
+      // Fetch books based on the selected tab.
       if (tab === 'all') {
-        response = await bookService.getAllBooks();
+        response = await bookService.getAllBooks(); // Fetch all books.
       } else if (tab === 'accepted') {
-        response = await bookService.getAcceptedBooks(userId);
+        response = await bookService.getAcceptedBooks(userId); // Fetch books accepted by the user.
       } else if (tab === 'pending') {
-        response = await bookService.getRequestedBooks(userId);
+        response = await bookService.getRequestedBooks(userId); // Fetch books requested by the user.
       } else if (tab === 'search') {
-        response = await bookService.getAllBooks(); // Load all, filter client-side.
+        response = await bookService.getAllBooks(); // Fetch all books for client-side filtering.
       }
       let data = response.data;
+      ;
+      // If in search mode, filter books based on the search query.
       if (tab === 'search' && searchQuery.trim() !== '') {
         const q = searchQuery.toLowerCase();
         data = data.filter(book =>
           book.title.toLowerCase().includes(q) || book.author.toLowerCase().includes(q)
         );
       }
-      setBooks(data);
+      setBooks(data); // Update the 'books' state with the fetched data.
     } catch (error) {
       const errorMsg = error.response && typeof error.response.data === 'object'
         ? JSON.stringify(error.response.data)
         : error.response?.data || error.message;
-      alert("Error fetching books: " + errorMsg);
+      alert("Error fetching books: " + errorMsg); // Show an error alert if fetching books fails.
     }
   };
 
+
+// If user is an admin, display a message that they should use the Admin Panel.
   if (isAdmin) {
     return (
       <div className="container text-center my-3">
@@ -56,33 +65,35 @@ const Books = () => {
     );
   }
 
+  // Handler function to request a book.
   const handleRequest = async (bookId) => {
     try {
-      await bookService.requestBook(bookId, userId);
-      alert("Book requested successfully.");
-      loadBooks();
+      await bookService.requestBook(bookId, userId); // Make API call to request the book.
+      alert("Book requested successfully."); // Show success alert.
+      loadBooks(); // Reload the books after requesting a book.
     } catch (error) {
       const errorMsg = error.response && typeof error.response.data === 'object'
         ? JSON.stringify(error.response.data)
         : error.response?.data || error.message;
-      alert("Error requesting book: " + errorMsg);
+      alert("Error requesting book: " + errorMsg); // Show an error alert if requesting book fails.
     }
   };
 
+  // Handler function to return a book.
   const handleReturn = async (bookId) => {
     try {
-      const response = await bookService.returnBook(bookId, userId);
-      alert(response.data);
-      loadBooks();
+      const response = await bookService.returnBook(bookId, userId); // Make API call to return the book.
+      alert(response.data); // Show success alert.
+      loadBooks(); // Reload the books after returning a book.
     } catch (error) {
       const errorMsg = error.response && typeof error.response.data === 'object'
         ? JSON.stringify(error.response.data)
         : error.response?.data || error.message;
-      alert("Error returning book: " + errorMsg);
+      alert("Error returning book: " + errorMsg); // Show an error alert if returning book fails.
     }
   };
 
-  // Books filtering using searchQuery
+  // Filter books based on search query (title or author).
   const filteredBooks = books.filter(book =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     book.author.toLowerCase().includes(searchQuery.toLowerCase())
