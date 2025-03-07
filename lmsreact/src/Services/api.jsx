@@ -10,7 +10,7 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    return config;
+    return config; //Returns the modified configuration object so that Axios can proceed with the HTTP request using the updated headers.
   },
   (error) => Promise.reject(error)
 );
